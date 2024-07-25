@@ -1,7 +1,9 @@
-import React, { useState } from 'react'
+import React, { useState,useContext } from 'react'
 import { useLocation,useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import { UserContext } from '../App'
 const Login = () => {
+  const {dispatch}=useContext(UserContext)
    const navigate=useNavigate()
     const location=useLocation()
     const message=location.state ? location.state.message:''
@@ -24,8 +26,12 @@ const Login = () => {
               'Authorization':localStorage.getItem('token')
             }
           })
-          console.log(accountResponse.data)
-          navigate('/')
+         const user=accountResponse.data
+         dispatch({
+          type:'USER_LOGIN',
+          payload:user
+         })
+          navigate('/dashboard')
       } catch (error) {
           // console.log(error.message)
           // console.log(error.response.data.errors)
