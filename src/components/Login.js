@@ -19,6 +19,12 @@ const Login = () => {
           const response=await axios.post('http://localhost:3018/auth/login',formData)
           // console.log(response.data)
           localStorage.setItem('token',response.data.token)
+          const accountResponse=await axios.get('http://localhost:3018/api/users/account',{
+            headers:{
+              'Authorization':localStorage.getItem('token')
+            }
+          })
+          console.log(accountResponse.data)
           navigate('/')
       } catch (error) {
           // console.log(error.message)
