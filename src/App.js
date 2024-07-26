@@ -1,4 +1,4 @@
-import React, { createContext, useReducer } from 'react'
+import React, { createContext, useEffect, useReducer } from 'react'
 import { BrowserRouter,Routes,Route} from 'react-router-dom'
 import Home from './components/Home'
 import Register from './components/Register'
@@ -6,7 +6,7 @@ import Login from './components/Login'
 import userReducer from './reducers/userReducer'
 import Dashboard from './components/Dashboard'
 import NavBar from './components/NavBar'
-
+import axios from 'axios'
 
 export const UserContext=createContext()
 export const App = () => {
@@ -14,7 +14,25 @@ export const App = () => {
     user:{}
   })
   
-  
+  useEffect(()=>{
+    if(localStorage.getItem('token')){
+      (async()=>{
+        try {
+          const response=await axios.get('http://localhost:3018/api/users/account',{
+            headers:{
+              'Authorization':localStorage.getItem('token')
+            }
+          })
+          dispatch({
+            type:'USER_LOGIN',
+            payload:response.data
+          })
+        } catch (error) {
+            alert(error.message)
+        }
+      })()
+    }
+  },[])
   return (
    <BrowserRouter>
     <UserContext.Provider  value={{state,dispatch}} >
